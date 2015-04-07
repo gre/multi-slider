@@ -27,13 +27,14 @@ var Example = React.createClass({
   },
 
   render: function () {
+    var colors = ["#FCBD7E","#EB9F71","#E6817C"];
     return <div style={{ fontFamily: "sans-serif" }}>
       <p>
       <h1>{packageJson.name}</h1>
       <h2 style={{ color: "#555" }}>{packageJson.description}</h2>
-      <pre><code>values={JSON.stringify(this.state.values)}</code></pre>
+      <pre><code>values={JSON.stringify(this.state.values)} colors={JSON.stringify(colors)}</code></pre>
       <MultiSlider
-        colors={["#FCBD7E","#EB9F71","#E6817C"]}
+        colors={colors}
         values={this.state.values}
         onChange={this.onChange}
       />
