@@ -1,0 +1,27 @@
+{
+  "name": "multi-slider",
+  "description": "React component for multiple values slider (allocate values)",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "example": "budo example.js"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
+  },
+  "author": "Gaëtan Renaudeau <renaudeau.gaetan@gmail.com>",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": "*"
+  },
+  "dependencies": {
+    "reactify": "^1.1.0",
+    "uncontrollable": "^1.1.3"
+  },
+  "devDependencies": {
+    "budo": "^2.1.5",
+    "watchify": "^3.1.0"
+  }
+}
