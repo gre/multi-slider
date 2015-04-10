@@ -37,8 +37,11 @@ var Handle = React.createClass({
       onMouseEnter: this.hoverIn,
       onMouseLeave: this.hoverOut
     };
+    var style = {
+      cursor: active ? "ew-resize" : "pointer"
+    };
 
-    return <g {...events}>
+    return <g style={style} {...events}>
       <circle
         key="1"
         cx={x}
