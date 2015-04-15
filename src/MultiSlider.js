@@ -2,7 +2,9 @@ var React = require("react");
 var uncontrollable = require("uncontrollable");
 var Handle = require("./Handle");
 var Track = require("./Track");
+var useTouches = require("./useTouches");
 var PropTypes = React.PropTypes;
+
 
 function step (min, max, x) {
   return Math.max(0, Math.min((x-min)/(max-min), 1));
@@ -45,8 +47,20 @@ var MultiSlider = React.createClass({
   },
 
   xForEvent: function (e) {
-    var bound = this.getDOMNode().getBoundingClientRect();
-    return e.clientX - bound.left;
+    var node = this.getDOMNode();
+    var bound = node.getBoundingClientRect();
+    var clientX = e.clientX;
+    if (useTouches()) {
+      // There is a bug in touch events and we need to compute the real clientX
+      // http://stackoverflow.com/questions/5885808/includes-touch-events-clientx-y-scrolling-or-not
+      clientX = e.pageX; // safer to start with pageX
+      var stopAt = document.body.parentElement;
+      while (node && node !== stopAt) {
+        clientX -= node.scrollLeft;
+        node = node.parentElement;
+      }
+    }
+    return clientX - bound.left;
   },
 
   sum: function () { // (might optimize this computation on values change if costy)
@@ -70,18 +84,40 @@ var MultiSlider = React.createClass({
     return sum * ((x-padX) / (width - 2 * padX));
   },
 
-  onHandleDown: function (i, e) {
+  concernedEvent: function (e) {
+    var down = this.state.down;
+    if (!useTouches()) {
+      return e;
+    }
+    else {
+      if (!down) return e.targetTouches[0];
+      var touchId = down.touchId;
+      var touches = e.changedTouches;
+      for (var i=0; i<touches.length; ++i) {
+        if (touches[i].identifier === touchId)
+          return touches[i];
+      }
+      return null;
+    }
+  },
+
+  onHandleStart: function (i, e) {
+    var event = this.concernedEvent(e);
+    if (!event) return;
     e.preventDefault();
     this.setState({
       down: {
-        x: this.xForEvent(e),
+        touchId: event.identifier,
+        x: this.xForEvent(event),
         controlled: i
       }
     });
   },
   onHandleMove: function (e) {
+    var event = this.concernedEvent(e);
+    if (!event) return;
     e.preventDefault();
-    var x = this.xForEvent(e);
+    var x = this.xForEvent(event);
     var valuePos = this.reverseX(x);
     var width = this.props.width;
     var down = this.state.down;
@@ -104,12 +140,16 @@ var MultiSlider = React.createClass({
       this.props.onChange(values);
     }
   },
-  onHandleUp: function (e) {
+  onHandleEnd: function (e) {
+    var event = this.concernedEvent(e);
+    if (!event) return;
     this.setState({
       down: null
     });
   },
-  onHandleLeave: function (e) {
+  onHandleAbort: function (e) {
+    var event = this.concernedEvent(e);
+    if (!event) return;
     this.setState({
       down: null
     });
@@ -133,6 +173,7 @@ var MultiSlider = React.createClass({
     var w =  width - 2*padX;
     var centerY = height / 2;
     var sum = this.sum();
+    var touchEvents = useTouches();
 
     var tracks = [];
     var handles = [];
@@ -155,6 +196,20 @@ var MultiSlider = React.createClass({
         />
       );
       if (i !== 0) {
+        var handleEvents = {};
+        if (touchEvents) {
+          if (!down) {
+            handleEvents.onTouchStart = this.onHandleStart.bind(null, i);
+          }
+          else if (down.controlled===i) {
+            handleEvents.onTouchMove = this.onHandleMove;
+            handleEvents.onTouchEnd = this.onHandleEnd;
+            handleEvents.onTouchCancel = this.onHandleAbort;
+          }
+        }
+        else {
+          handleEvents.onMouseDown = this.onHandleStart.bind(null, i);
+        }
         handles.push(
           <Handle
             key={i}
@@ -166,7 +221,7 @@ var MultiSlider = React.createClass({
             strokeWidth={handleStrokeSize}
             innerRadius={handleInnerDotSize}
             size={handleSize}
-            onMouseDown={this.onHandleDown.bind(null, i)}
+            events={handleEvents}
           />
         );
       }
@@ -183,10 +238,10 @@ var MultiSlider = React.createClass({
       handles = h1.concat(h2);
     }
     var events = {};
-    if (down) {
+    if (!touchEvents && down) {
       events.onMouseMove = this.onHandleMove;
-      events.onMouseUp = this.onHandleUp;
-      events.onMouseLeave = this.onHandleLeave;
+      events.onMouseUp = this.onHandleEnd;
+      events.onMouseLeave = this.onHandleAbort;
     }
     return <svg
       {...events}

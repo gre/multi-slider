@@ -1,4 +1,6 @@
 var React = require("react");
+var objectAssign = require("object-assign");
+var useTouches = require("./useTouches");
 
 var Handle = React.createClass({
 
@@ -32,13 +34,13 @@ var Handle = React.createClass({
     var innerRadius = props.innerRadius;
     var bg = props.bg;
     var color = props.color;
-    var events = {
-      onMouseDown: props.onMouseDown,
+    var events = objectAssign(useTouches() ? {} : {
       onMouseEnter: this.hoverIn,
       onMouseLeave: this.hoverOut
-    };
+    }, props.events);
     var style = {
-      cursor: active ? "ew-resize" : "pointer"
+      cursor: active ? "ew-resize" : "pointer",
+      WebkitTapHighlightColor: "rgba(0,0,0,0)"
     };
 
     return <g style={style} {...events}>
