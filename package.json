@@ -17,6 +17,7 @@
     "react": "*"
   },
   "dependencies": {
+    "object-assign": "^2.0.0",
     "reactify": "^1.1.0",
     "uncontrollable": "^1.1.3"
   },
