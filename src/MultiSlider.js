@@ -47,6 +47,26 @@ var MultiSlider = React.createClass({
   },
 
   xForEvent: function (e) {
+    var node = this.getDOMNode();
+    var clientX = e.clientX;
+    var m = node.getScreenCTM();
+    var p = node.createSVGPoint(); 
+    if (useTouches()) {
+      // There is a bug in touch events and we need to compute the real clientX
+      // http://stackoverflow.com/questions/5885808/includes-touch-events-clientx-y-scrolling-or-not
+      clientX = e.pageX; // safer to start with pageX
+      var stopAt = document.body.parentElement;
+      while (node && node !== stopAt) {
+        clientX -= node.scrollLeft;
+        node = node.parentElement;
+      }
+    }
+    p.x = e.clientX;
+    p = p.matrixTransform(m.inverse());
+    return p.x;
+  },
+
+  xForEvent: function (e) {
    var node = this.getDOMNode();
    var m = node.getScreenCTM();
    var p = node.createSVGPoint(); 
@@ -247,9 +267,8 @@ var MultiSlider = React.createClass({
     }
     return <svg
       {...events}
-      width='100%'
-      viewBox={'0 0 '+ width + ' '+ height}
-      height='100%'>
+      width={width}
+      height={height}>
       {tracks}
       {handles}
     </svg>;
