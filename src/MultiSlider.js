@@ -48,8 +48,9 @@ var MultiSlider = React.createClass({
 
   xForEvent: function (e) {
     var node = this.getDOMNode();
-    var bound = node.getBoundingClientRect();
     var clientX = e.clientX;
+    var m = node.getScreenCTM();
+    var p = node.createSVGPoint(); 
     if (useTouches()) {
       // There is a bug in touch events and we need to compute the real clientX
       // http://stackoverflow.com/questions/5885808/includes-touch-events-clientx-y-scrolling-or-not
@@ -60,7 +61,9 @@ var MultiSlider = React.createClass({
         node = node.parentElement;
       }
     }
-    return clientX - bound.left;
+    p.x = e.clientX;
+    p = p.matrixTransform(m.inverse());
+    return p.x;
   },
 
   sum: function () { // (might optimize this computation on values change if costy)
