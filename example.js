@@ -40,18 +40,18 @@ var Example = React.createClass({
       />
       </p>
       <hr />
-      <p>
+      <p style={{width:"400px"}}>
       <MultiSlider
         defaultValues={[8, 1]}
       />
       </p>
-      <p>
+      <p style={{width:"400px"}}>
       <MultiSlider
         colors={hslPalette(4, "70%", "60%")}
         defaultValues={[1, 2, 8, 1]}
       />
       </p>
-      <p>
+      <p style={{width:"400px"}}>
       <MultiSlider
         colors={hslPalette(8, "70%")}
         defaultValues={[3,4,5,6,4,5,6,7]}
