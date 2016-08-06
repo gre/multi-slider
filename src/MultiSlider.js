@@ -1,5 +1,4 @@
 var React = require("react");
-var uncontrollable = require("uncontrollable");
 var Handle = require("./Handle");
 var Track = require("./Track");
 var useTouches = require("./useTouches");
@@ -47,7 +46,7 @@ var MultiSlider = React.createClass({
   },
 
   xForEvent: function (e) {
-    var node = this.getDOMNode();
+    var node = this.refs.root;
     var clientX = e.clientX;
     var m = node.getScreenCTM();
     var p = node.createSVGPoint();
@@ -122,7 +121,6 @@ var MultiSlider = React.createClass({
     e.preventDefault();
     var x = this.xForEvent(event);
     var valuePos = this.reverseX(x);
-    var width = this.props.width;
     var down = this.state.down;
     var values = this.props.values;
     var leftIndex = down.controlled-1;
@@ -172,10 +170,7 @@ var MultiSlider = React.createClass({
     var handleStrokeSize = props.handleStrokeSize;
     var handleInnerDotSize = props.handleInnerDotSize;
     var bg = props.bg;
-    var padX = props.padX;
-    var w =  width - 2*padX;
     var centerY = height / 2;
-    var sum = this.sum();
     var touchEvents = useTouches();
 
     var tracks = [];
@@ -247,6 +242,7 @@ var MultiSlider = React.createClass({
       events.onMouseLeave = this.onHandleAbort;
     }
     return <svg
+      ref="root"
       {...events}
       width="100%"
       height="100%"

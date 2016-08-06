@@ -1,8 +1,7 @@
-var React = require("react/addons");
-var MultiSlider = require(".");
-var packageJson = require("./package.json");
-
-window.Perf = React.addons.Perf;
+import React from "react";
+import {render} from "react-dom";
+import MultiSlider from ".";
+import packageJson from "./package.json";
 
 function hslPalette (n,s,l) {
   var c = [];
@@ -12,24 +11,20 @@ function hslPalette (n,s,l) {
   return c;
 }
 
-var Example = React.createClass({
+class Example extends React.Component {
+  state = {
+    values: [48,29,23]
+  };
 
-  getInitialState: function () {
-    return {
-      values: [48,29,23]
-    };
-  },
-
-  onChange: function (values) {
+  onChange = (values) =>
     this.setState({
       values: values
     });
-  },
 
-  render: function () {
+  render () {
     var colors = ["#FCBD7E","#EB9F71","#E6817C"];
     return <div style={{ fontFamily: "sans-serif" }}>
-      <p>
+      <div>
       <h1>{packageJson.name}</h1>
       <h2 style={{ color: "#555" }}>{packageJson.description}</h2>
       <pre><code>values={JSON.stringify(this.state.values)} colors={JSON.stringify(colors)}</code></pre>
@@ -38,28 +33,30 @@ var Example = React.createClass({
         values={this.state.values}
         onChange={this.onChange}
       />
-      </p>
+      </div>
       <hr />
-      <p style={{width:"400px"}}>
+      <div style={{width:"400px"}}>
       <MultiSlider
         defaultValues={[8, 1]}
       />
-      </p>
-      <p style={{width:"400px"}}>
+      </div>
+      <div style={{width:"400px"}}>
       <MultiSlider
         colors={hslPalette(4, "70%", "60%")}
         defaultValues={[1, 2, 8, 1]}
       />
-      </p>
-      <p style={{width:"400px"}}>
+      </div>
+      <div style={{width:"400px"}}>
       <MultiSlider
         colors={hslPalette(8, "70%")}
         defaultValues={[3,4,5,6,4,5,6,7]}
       />
-      </p>
+      </div>
     </div>;
   }
 
-});
+}
 
-React.render(<Example />, document.body);
+const container = document.createElement("div");
+document.body.appendChild(container);
+render(<Example />, container);
