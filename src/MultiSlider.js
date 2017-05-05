@@ -2,16 +2,16 @@ var React = require("react");
 var Handle = require("./Handle");
 var Track = require("./Track");
 var useTouches = require("./useTouches");
-var PropTypes = React.PropTypes;
+var PropTypes = require("prop-types");
 
 
 function step (min, max, x) {
   return Math.max(0, Math.min((x-min)/(max-min), 1));
 }
 
-var MultiSlider = React.createClass({
+class MultiSlider extends React.Component {
 
-  propTypes: {
+  static propTypes = {
     colors: PropTypes.arrayOf(PropTypes.string),
     values: PropTypes.arrayOf(PropTypes.number),
     onChange: PropTypes.func,
@@ -23,10 +23,9 @@ var MultiSlider = React.createClass({
     handleStrokeSize: PropTypes.number,
     handleInnerDotSize: PropTypes.number,
     bg: PropTypes.string
-  },
+  }
 
-  getDefaultProps: function () {
-    return {
+  static defaultProps = {
       colors: ["#000"], // define your own colors instead.
       handleSize: 16,
       padX: 20, // MUST be > handleSize to avoid clip issues
@@ -36,16 +35,13 @@ var MultiSlider = React.createClass({
       handleStrokeSize: 3,
       handleInnerDotSize: 4,
       bg: "#fff"
-    };
-  },
+  }
 
-  getInitialState: function () {
-    return {
+  state = {
       down: null
-    };
-  },
+  }
 
-  xForEvent: function (e) {
+  xForEvent (e) {
     var node = this.refs.root;
     var clientX = e.clientX;
     var m = node.getScreenCTM();
@@ -63,30 +59,30 @@ var MultiSlider = React.createClass({
     p.x = e.clientX;
     p = p.matrixTransform(m.inverse());
     return p.x;
-  },
+  }
 
-  sum: function () { // (might optimize this computation on values change if costy)
+  sum () { // (might optimize this computation on values change if costy)
     return this.props.values.reduce(function (a,b) { return a + b; });
-  },
+  }
 
   // map a value to an x position
-  x: function (value) {
+  x (value) {
     var props = this.props;
     var width = props.width;
     var padX = props.padX;
     var sum = this.sum();
     return Math.round(padX + value * (width - 2 * padX) / sum);
-  },
+  }
 
-  reverseX: function (x) {
+  reverseX (x) {
     var props = this.props;
     var width = props.width;
     var padX = props.padX;
     var sum = this.sum();
     return sum * ((x-padX) / (width - 2 * padX));
-  },
+  }
 
-  concernedEvent: function (e) {
+  concernedEvent = (e) => {
     var down = this.state.down;
     if (!useTouches()) {
       return e;
@@ -101,9 +97,9 @@ var MultiSlider = React.createClass({
       }
       return null;
     }
-  },
+  }
 
-  onHandleStart: function (i, e) {
+  onHandleStart = (i, e) => {
     var event = this.concernedEvent(e);
     if (!event) return;
     e.preventDefault();
@@ -114,8 +110,8 @@ var MultiSlider = React.createClass({
         controlled: i
       }
     });
-  },
-  onHandleMove: function (e) {
+  }
+  onHandleMove = (e) => {
     var event = this.concernedEvent(e);
     if (!event) return;
     e.preventDefault();
@@ -140,23 +136,23 @@ var MultiSlider = React.createClass({
       values[rightIndex] = right;
       this.props.onChange(values);
     }
-  },
-  onHandleEnd: function (e) {
+  }
+  onHandleEnd = (e) => {
     var event = this.concernedEvent(e);
     if (!event) return;
     this.setState({
       down: null
     });
-  },
-  onHandleAbort: function (e) {
+  }
+  onHandleAbort = (e) => {
     var event = this.concernedEvent(e);
     if (!event) return;
     this.setState({
       down: null
     });
-  },
+  }
 
-  render: function () {
+  render () {
     var state = this.state;
     var down = state.down;
     var props = this.props;
@@ -252,6 +248,6 @@ var MultiSlider = React.createClass({
     </svg>;
   }
 
-});
+};
 
 module.exports = MultiSlider;

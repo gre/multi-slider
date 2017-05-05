@@ -2,27 +2,23 @@ var React = require("react");
 var objectAssign = require("object-assign");
 var useTouches = require("./useTouches");
 
-var Handle = React.createClass({
+class Handle extends React.Component {
 
-  getInitialState: function () {
-    return {
+  state = {
       hover: false
-    };
-  },
+  }
 
-  hoverIn: function () {
+  hoverIn = () =>
     this.setState({
       hover: true
-    });
-  },
+    })
 
-  hoverOut: function () {
+  hoverOut = () =>
     this.setState({
       hover: false
-    });
-  },
+    })
 
-  render: function () {
+  render () {
     var state = this.state;
     var hover = state.hover;
     var props = this.props;
@@ -68,6 +64,6 @@ var Handle = React.createClass({
       />
     </g>;
   }
-});
+}
 
 module.exports = Handle;
