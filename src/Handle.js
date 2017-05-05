@@ -1,24 +1,23 @@
-var React = require("react");
-var objectAssign = require("object-assign");
-var useTouches = require("./useTouches");
+import React from "react";
+import objectAssign from "object-assign";
+import useTouches from "./useTouches";
 
-class Handle extends React.Component {
-
+export default class Handle extends React.Component {
   state = {
-      hover: false
-  }
+    hover: false,
+  };
 
   hoverIn = () =>
     this.setState({
-      hover: true
-    })
+      hover: true,
+    });
 
   hoverOut = () =>
     this.setState({
-      hover: false
-    })
+      hover: false,
+    });
 
-  render () {
+  render() {
     var state = this.state;
     var hover = state.hover;
     var props = this.props;
@@ -30,40 +29,39 @@ class Handle extends React.Component {
     var innerRadius = props.innerRadius;
     var bg = props.bg;
     var color = props.color;
-    var events = objectAssign(useTouches() ? {} : {
-      onMouseEnter: this.hoverIn,
-      onMouseLeave: this.hoverOut
-    }, props.events);
+    var events = objectAssign(
+      useTouches()
+        ? {}
+        : {
+            onMouseEnter: this.hoverIn,
+            onMouseLeave: this.hoverOut,
+          },
+      props.events
+    );
     var style = {
       cursor: active ? "ew-resize" : "pointer",
-      WebkitTapHighlightColor: "rgba(0,0,0,0)"
+      WebkitTapHighlightColor: "rgba(0,0,0,0)",
     };
 
-    return <g style={style} {...events}>
-      <circle
-        key="1"
-        cx={x}
-        cy={y}
-        r={size}
-        fill={color}
-      />
-      <circle
-        key="2"
-        opacity={active ? 0 : (hover ? 0.8 : 1)}
-        cx={x}
-        cy={y}
-        r={size-strokeWidth}
-        fill={bg}
-      />
-      <circle
-        key="3"
-        cx={x}
-        cy={y}
-        r={innerRadius}
-        fill={active ? bg : color}
-      />
-    </g>;
+    return (
+      <g style={style} {...events}>
+        <circle key="1" cx={x} cy={y} r={size} fill={color} />
+        <circle
+          key="2"
+          opacity={active ? 0 : hover ? 0.8 : 1}
+          cx={x}
+          cy={y}
+          r={size - strokeWidth}
+          fill={bg}
+        />
+        <circle
+          key="3"
+          cx={x}
+          cy={y}
+          r={innerRadius}
+          fill={active ? bg : color}
+        />
+      </g>
+    );
   }
 }
-
-module.exports = Handle;

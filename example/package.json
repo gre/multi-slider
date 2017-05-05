@@ -1,0 +1,24 @@
+{
+  "name": "multi-slider-example",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "budo index.js -- -t babelify"
+  },
+  "author": "Gaëtan Renaudeau <renaudeau.gaetan@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^15.5.0",
+    "react-dom": "^15.3.0",
+    "multi-slider": "file:.."
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-1": "^6.11.0",
+    "babelify": "^7.3.0",
+    "budo": "^8.3.0",
+    "watchify": "^3.7.0"
+  }
+}

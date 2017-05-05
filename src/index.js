@@ -1,3 +1,3 @@
-var MultiSlider = require("./MultiSlider");
-var uncontrollable = require("uncontrollable");
-module.exports = uncontrollable(MultiSlider, { values: "onChange" });
+import MultiSlider from "./MultiSlider";
+import uncontrollable from "uncontrollable";
+export default uncontrollable(MultiSlider, { values: "onChange" });
