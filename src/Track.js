@@ -1,7 +1,7 @@
 var React = require("react");
 
-var Track = React.createClass({
-  render: function () {
+class Track extends React.Component {
+  render () {
     var props = this.props;
     var color = props.color;
     var y = props.y;
@@ -18,6 +18,6 @@ var Track = React.createClass({
       strokeLinecap="round"
     />;
   }
-});
+};
 
 module.exports = Track;
