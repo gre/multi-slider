@@ -40,7 +40,7 @@ export default class MultiSlider extends React.Component {
   };
 
   xForEvent(e) {
-    var node = this.refs.root;
+    var node = this.root;
     var clientX = e.clientX;
     var m = node.getScreenCTM();
     var p = node.createSVGPoint();
@@ -240,7 +240,7 @@ export default class MultiSlider extends React.Component {
     }
     return (
       <svg
-        ref="root"
+        ref={(node) => { this.root = node; }}
         {...events}
         width="100%"
         height="100%"
