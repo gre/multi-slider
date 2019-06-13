@@ -1,0 +1,33 @@
+
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended",
+    "strict",
+    "strict/browser",
+    "plugin:flowtype-errors/recommended"
+  ],
+  "parser": "babel-eslint",
+  "plugins": [
+    "flowtype",
+    "react",
+    "babel",
+    "filenames",
+    "flowtype-errors"
+  ],
+  "rules": {
+    "filenames/match-regex": "off",
+    "no-invalid-this": "off",
+    "babel/no-invalid-this": "warn",
+    "no-inline-comments": "off",
+    "line-comment-position": "off",
+    "no-mixed-operators": "off",
+    "id-length": "warn",
+    "no-nested-ternary": "warn",
+  }
+}
